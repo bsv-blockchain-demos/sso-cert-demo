@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { ConfidentialClientApplication } from "@azure/msal-node";
 import axios from "axios";
+import { cookies } from "next/headers";
+import { createSecretKey } from "crypto";
+import { SignJWT } from "jose";
 
 const config = {
     auth: {
@@ -46,6 +49,24 @@ export async function POST(request: Request) {
         const isBsvEmail = user.mail?.endsWith("@bsvassociation.org") ?? false;
 
         // Create cookie here
+        const jwt = new SignJWT({
+            name: user.displayName,
+            email: user.mail,
+            isBsvEmail,
+        });
+        jwt.setProtectedHeader({ alg: "HS256" });
+        jwt.setExpirationTime("5m");
+
+        const secret = createSecretKey(Buffer.from(process.env.JWT_SECRET!, "utf-8"));
+        const token = await jwt.sign(secret);
+
+        const cookieStore = await cookies();
+        cookieStore.set("verified", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            path: "/",
+        });
 
         return NextResponse.json({
             success: true,
