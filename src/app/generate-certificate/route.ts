@@ -1,5 +1,6 @@
-import { WalletClient, Utils } from '@bsv/sdk'
+import { Utils } from '@bsv/sdk'
 import { NextResponse } from 'next/server'
+import { connectWallet } from '../../lib/connectWallet';
 
 const serverPubKey = process.env.NEXT_PUBLIC_SERVER_PUBLIC_KEY as string;
 const certifierUrl = process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080";
@@ -36,16 +37,4 @@ export default async function POST(request: Request) {
             error,
         });
     }
-}
-
-async function connectWallet() {
-    // Connect to wallet with BEEF capabilities
-    const wallet = new WalletClient('auto', 'localhost');
-    const isConnected = await wallet.isAuthenticated();
-
-    if (isConnected) {
-        return wallet;
-    }
-
-    return null;
 }
