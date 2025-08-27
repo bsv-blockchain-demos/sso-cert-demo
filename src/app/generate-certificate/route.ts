@@ -2,6 +2,7 @@ import { WalletClient, Utils } from '@bsv/sdk'
 import { NextResponse } from 'next/server'
 
 const serverPubKey = process.env.NEXT_PUBLIC_SERVER_PUBLIC_KEY as string;
+const certifierUrl = process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080";
 
 export default async function POST(request: Request) {
     const body = await request.json();
@@ -19,7 +20,7 @@ export default async function POST(request: Request) {
             fields,
             acquisitionProtocol: "issuance",
             certifier: serverPubKey,
-            certifierUrl: process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080",
+            certifierUrl,
         });
         console.log(certResponse);
 

@@ -16,11 +16,15 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { code } = body;
 
-    if (!code) {
-        return NextResponse.json({ success: false, error: "No code provided" });
-    }
-
     const redirectUri = process.env.REDIRECT_URI!;
+
+    if (!code) {
+        const authUrl = await cca.getAuthCodeUrl({
+            scopes: ["User.Read"],
+            redirectUri,
+        });
+        return NextResponse.json({ redirectUrl: authUrl });
+    }
 
     try {
         // Exchange code for token
@@ -40,6 +44,8 @@ export async function POST(request: Request) {
         const user = graphResponse.data;
 
         const isBsvEmail = user.mail?.endsWith("@bsvassociation.org") ?? false;
+
+        // Create cookie here
 
         return NextResponse.json({
             success: true,

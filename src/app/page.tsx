@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 export default function Home() {
   const [user, setUser] = useState<{ displayName: string; mail: string; isBsvEmail: boolean } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkCode = async () => {
@@ -9,10 +10,12 @@ export default function Home() {
       const code = url.searchParams.get("code");
 
       if (code && !user) {
+        setLoading(true);
         // Clean the URL for UX
         window.history.replaceState({}, document.title, window.location.pathname);
 
         const response = await fetch("/auth/login", {
+          headers: { "Content-Type": "application/json" },
           method: "POST",
           body: JSON.stringify({ code }),
         })
@@ -20,13 +23,26 @@ export default function Home() {
         const data = await response.json();
         console.log(data);
         setUser(data.user);
+        setLoading(false);
       }
     }
     checkCode();
-  }, [user]);
+  }, []);
 
   const loginWithMicrosoft = async () => {
     // Redirect to microsoft login
+    const response = await fetch("/auth/login", {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({ code: "" }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (data.redirectUrl) {
+      window.location.href = data.redirectUrl;
+    }
   }
 
   const generateCertificate = async () => {
@@ -42,10 +58,8 @@ export default function Home() {
 
     try {
       const response = await fetch('/generate-certificate', {
+        headers: { "Content-Type": "application/json" },
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           fields: {
             name: user.displayName,
@@ -63,7 +77,9 @@ export default function Home() {
 
   return (
     <div>
-      {user ? (
+      {loading ? (
+        <div>Loading...</div>
+      ) : user ? (
         <div>
           <p className="text-3xl font-bold underline">BSVACerts</p>
           <button onClick={generateCertificate}>Generate Certificate</button>
