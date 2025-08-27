@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 import { createSecretKey } from "crypto";
 import { SignJWT } from "jose";
 
+const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
+
 const config = {
     auth: {
         clientId: process.env.MICROSOFT_CLIENT_ID!,
@@ -46,13 +48,13 @@ export async function POST(request: Request) {
 
         const user = graphResponse.data;
 
-        const isBsvEmail = user.mail?.endsWith("@bsvassociation.org") ?? false;
+        const isValidEmail = user.mail?.endsWith(emailDomainCheck) ?? false;
 
         // Create cookie here
         const jwt = new SignJWT({
             name: user.displayName,
             email: user.mail,
-            isBsvEmail,
+            isValidEmail,
         });
         jwt.setProtectedHeader({ alg: "HS256" });
         jwt.setExpirationTime("5m");
@@ -73,7 +75,7 @@ export async function POST(request: Request) {
             user: {
                 name: user.displayName,
                 email: user.mail,
-                isBsvEmail,
+                isValidEmail,
             },
         });
     } catch (error: unknown) {

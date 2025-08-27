@@ -5,8 +5,10 @@ import { toast } from "react-hot-toast";
 
 import SuccessModal from "../components/successModal";
 
+const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
+
 export default function Home() {
-  const [user, setUser] = useState<{ displayName: string; mail: string; isBsvEmail: boolean } | null>(null);
+  const [user, setUser] = useState<{ displayName: string; mail: string; isValidEmail: boolean } | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -53,14 +55,14 @@ export default function Home() {
 
   const generateCertificate = async () => {
     // Check cookie for verified before proceeding
-    // Verify it's a valid bsva email
+    // Verify it's a valid email
     if (!user?.mail) {
       toast.error("No user found");
       return;
     }
 
-    if (!isBsvAssociationEmail(user.mail)) {
-      toast.error("User doesn't have a valid BSV Association email");
+    if (!isValidEmail(user.mail)) {
+      toast.error("User doesn't have a valid email");
       return;
     }
 
@@ -111,6 +113,6 @@ export default function Home() {
   );
 }
 
-function isBsvAssociationEmail(value: unknown): value is string {
-  return typeof value === "string" && value.endsWith("@bsvassociation.org");
+function isValidEmail(value: unknown): value is string {
+  return typeof value === "string" && value.endsWith(emailDomainCheck);
 }

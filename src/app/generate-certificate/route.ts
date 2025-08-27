@@ -7,6 +7,7 @@ import { jwtVerify } from 'jose';
 
 const serverPubKey = process.env.NEXT_PUBLIC_SERVER_PUBLIC_KEY as string;
 const certifierUrl = process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080";
+const certType = process.env.CERT_TYPE as string;
 
 export async function POST(request: Request) {
     const body = await request.json();
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
         // Verify the JWT
         const { payload } = await jwtVerify(token, secret);
 
-        if (!payload.verified && payload.isBsvEmail !== true) {
+        if (!payload.isValidEmail) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
             throw new Error('Wallet not connected');
         }
         const certResponse = await wallet.acquireCertificate({
-            type: Utils.toBase64(Utils.toArray('BSVA Employee Identity', 'utf8')),
+            type: Utils.toBase64(Utils.toArray(certType, 'utf8')),
             fields,
             acquisitionProtocol: "issuance",
             certifier: serverPubKey,

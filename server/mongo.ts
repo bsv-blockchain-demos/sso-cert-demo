@@ -4,6 +4,7 @@ dotenv.config();
 
 // Use environment variable for MongoDB URI or fallback to hardcoded value
 const uri = process.env.MONGODB_URI as string;
+const clusterName = process.env.MONGODB_CLUSTER_NAME as string;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -28,7 +29,7 @@ async function connectToMongo() {
       console.log("Connected to MongoDB!");
       
       // Initialize database and collections
-      db = client.db("BSVA");
+      db = client.db(clusterName);
       usersCollection = db.collection("users");
       verifyCollection = db.collection("verify");
       
