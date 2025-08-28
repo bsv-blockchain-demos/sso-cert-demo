@@ -68,6 +68,7 @@ export async function POST(request: Request) {
             secure: true,
             sameSite: "strict",
             path: "/",
+            expires: new Date(Date.now() + 5 * 60 * 1000),
         });
 
         return NextResponse.json({

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { connectWallet } from '../../lib/connectWallet';
 import { cookies } from 'next/headers';
 import { createSecretKey } from 'crypto';
-import { jwtVerify } from 'jose';
+import { jwtVerify, errors } from 'jose';
 
 const serverPubKey = process.env.NEXT_PUBLIC_SERVER_PUBLIC_KEY as string;
 const certifierUrl = process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080";
@@ -51,11 +51,11 @@ export async function POST(request: Request) {
             data: certResponse,
         });
 
-    } catch (error: unknown) {
-        console.log(error);
-        return NextResponse.json({
-            success: false,
-            error,
-        });
+    } catch (err) {
+        if (err instanceof errors.JWTExpired) {
+            cookieStore.delete("verified");
+            return NextResponse.json({ success: false, error: "Token expired" }, { status: 401 });
+        }
+        return NextResponse.json({ success: false, error: err }, { status: 401 });
     }
 }

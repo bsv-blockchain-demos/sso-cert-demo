@@ -8,7 +8,7 @@ import SuccessModal from "../components/successModal";
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
 
 export default function Home() {
-  const [user, setUser] = useState<{ displayName: string; mail: string; isValidEmail: boolean } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; isValidEmail: boolean } | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -56,12 +56,12 @@ export default function Home() {
   const generateCertificate = async () => {
     // Check cookie for verified before proceeding
     // Verify it's a valid email
-    if (!user?.mail) {
+    if (!user?.email) {
       toast.error("No user found");
       return;
     }
 
-    if (!isValidEmail(user.mail)) {
+    if (!isValidEmail(user.email)) {
       toast.error("User doesn't have a valid email");
       return;
     }
@@ -72,14 +72,22 @@ export default function Home() {
         method: 'POST',
         body: JSON.stringify({
           fields: {
-            name: user.displayName,
-            email: user.mail,
+            name: user.name,
+            email: user.email,
           },
         }),
       })
 
       const data = await response.json();
       console.log(data);
+
+      if (!data.success) {
+        if (data.error === "Token expired") {
+          setUser(null);
+        }
+        throw new Error(data.error);
+      }
+      
       setShowSuccessModal(true);
     } catch (error: unknown) {
       console.log(error);
@@ -108,11 +116,11 @@ export default function Home() {
               <p className="text-blue-200 text-lg">Access the blockchain using your own certified identity</p>
             </div>
             <div className="space-y-4">
-              <p className="text-white text-lg">Welcome, {user.displayName}</p>
-              <p className="text-blue-200 text-sm">{user.mail}</p>
+              <p className="text-white text-lg">Welcome, {user.name}</p>
+              <p className="text-blue-200 text-sm">{user.email}</p>
               <button 
                 onClick={generateCertificate}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:cursor-pointer"
               >
                 Generate Certificate
               </button>
@@ -128,7 +136,7 @@ export default function Home() {
               <p className="text-white text-lg mb-6">Choose your desired identity certification</p>
               <button 
                 onClick={loginWithMicrosoft}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2 hover:cursor-pointer"
               >
                 <svg className="w-5 h-5" viewBox="0 0 23 23" fill="currentColor">
                   <path d="M11 11h11v11H11V11zM0 11h11v11H0V11zM11 0h11v11H11V0zM0 0h11v11H0V0z"/>

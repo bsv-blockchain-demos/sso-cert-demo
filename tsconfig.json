@@ -9,10 +9,12 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "module": "esnext",
+    "types": ["node"],
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "allowImportingTsExtensions": true,
     "incremental": true,
     "plugins": [
       {

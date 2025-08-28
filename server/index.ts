@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import { createAuthMiddleware } from '@bsv/auth-express-middleware'
 import { WalletClient, PrivateKey, KeyDeriver, WalletInterface } from '@bsv/sdk'
 import { WalletStorageManager, Services, Wallet, StorageClient } from '@bsv/wallet-toolbox-client'
-import { signCertificate } from './signCertificate'
+import { signCertificate } from './signCertificate.ts'
 import dotenv from 'dotenv'
 
 dotenv.config();
