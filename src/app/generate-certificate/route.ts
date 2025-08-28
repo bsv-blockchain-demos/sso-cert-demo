@@ -51,11 +51,11 @@ export async function POST(request: Request) {
             data: certResponse,
         });
 
-    } catch (err) {
+    } catch (err: unknown) {
         if (err instanceof errors.JWTExpired) {
             cookieStore.delete("verified");
             return NextResponse.json({ success: false, error: "Token expired" }, { status: 401 });
         }
-        return NextResponse.json({ success: false, error: err }, { status: 401 });
+        return NextResponse.json({ success: false, error: err instanceof Error ? err.message : "Unknown error" }, { status: 401 });
     }
 }
