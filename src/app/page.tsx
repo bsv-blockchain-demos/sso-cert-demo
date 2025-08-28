@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-
 import SuccessModal from "../components/successModal";
+import { useRouter } from "next/navigation";
 
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
 
@@ -11,6 +11,7 @@ export default function Home() {
   const [user, setUser] = useState<{ name: string; email: string; isValidEmail: boolean } | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const checkCode = async () => {
@@ -36,6 +37,25 @@ export default function Home() {
     }
     checkCode();
   }, []);
+
+  useEffect(() => {
+    const checkCertificateOwnership = async () => {
+      if (!user) {
+        return;
+      }
+      const response = await fetch("/check-certificate-ownership", {
+        headers: { "Content-Type": "application/json" },
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+
+      if (data.success) {
+        router.push("/owns-certificate");
+      }
+    }
+    checkCertificateOwnership();
+  }, [user]);
 
   const loginWithMicrosoft = async () => {
     // Redirect to microsoft login
