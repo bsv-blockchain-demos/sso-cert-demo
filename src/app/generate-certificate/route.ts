@@ -1,6 +1,7 @@
 import { Utils } from '@bsv/sdk'
 import { NextResponse } from 'next/server'
 import { connectWallet } from '../../lib/connectWallet';
+import { connectToMongo } from '../../lib/mongo';
 import { cookies } from 'next/headers';
 import { createSecretKey } from 'crypto';
 import { jwtVerify, errors } from 'jose';
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
     const token = cookieStore.get("verified")?.value;
 
     if (!token) {
-        return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ success: false, error: "No token found" }, { status: 401 });
     }
 
     try {
@@ -32,11 +33,29 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
+        if (payload.email !== fields.email) {
+            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        }
+
+        if (payload.name !== fields.name) {
+            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        }
+
         // Verified cookie, continue
         const wallet = await connectWallet();
         if (!wallet) {
             throw new Error('Wallet not connected');
         }
+
+        // Check db for certificate
+        const { db, usersCollection } = await connectToMongo();
+        const { publicKey } = await wallet.getPublicKey({ identityKey: true });
+        const user = await usersCollection.findOne({ _id: publicKey });
+
+        if (user) {
+            return NextResponse.json({ success: true, data: "User already has a certificate" }, { status: 200 });
+        }
+
         const certResponse = await wallet.acquireCertificate({
             type: Utils.toBase64(Utils.toArray(certType, 'utf8')),
             fields,

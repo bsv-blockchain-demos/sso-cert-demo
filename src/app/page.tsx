@@ -104,8 +104,15 @@ export default function Home() {
       if (!data.success) {
         if (data.error === "Token expired") {
           setUser(null);
+        } else if (data.error === "No token found") {
+          setUser(null);
         }
         throw new Error(data.error);
+      }
+
+      if (data.data === "User already has a certificate") {
+        router.push("/owns-certificate");
+        return;
       }
       
       setShowSuccessModal(true);
@@ -167,7 +174,10 @@ export default function Home() {
           </div>
         )}
       </div>
-      {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} />}
+      {showSuccessModal && <SuccessModal onClose={() => {
+        setShowSuccessModal(false);
+        router.push("/owns-certificate");
+      }} />}
     </div>
   );
 }
