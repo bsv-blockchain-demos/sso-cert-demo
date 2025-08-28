@@ -8,7 +8,7 @@ export default function SuccessModal({ onClose }: SuccessModalProps) {
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative">
                 <button 
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors hover:cursor-pointer"
                 >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -29,7 +29,7 @@ export default function SuccessModal({ onClose }: SuccessModalProps) {
                     
                     <button
                         onClick={onClose}
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200"
+                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 hover:cursor-pointer"
                     >
                         Close
                     </button>

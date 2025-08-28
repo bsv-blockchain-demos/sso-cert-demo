@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "server": "node --loader ts-node/esm server/index.ts",
+    "server": "npx tsx server/index.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -24,7 +24,7 @@
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.6.0",
     "react-toastify": "^11.0.5",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.20.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

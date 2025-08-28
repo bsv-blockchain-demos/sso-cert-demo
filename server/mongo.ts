@@ -18,7 +18,6 @@ const client = new MongoClient(uri, {
 // Database and collections
 let db: any;
 let usersCollection: any;
-let verifyCollection: any;
 
 // Connect to MongoDB
 async function connectToMongo() {
@@ -31,16 +30,11 @@ async function connectToMongo() {
       // Initialize database and collections
       db = client.db(clusterName);
       usersCollection = db.collection("users");
-      verifyCollection = db.collection("verify");
       
       // Create indexes for better performance
       await usersCollection.createIndex({ "_id": 1 });
       await usersCollection.createIndex({ "email": 1 });
       await usersCollection.createIndex({ "signedCertificate": 1 });
-
-      await verifyCollection.createIndex({ "email": 1 });
-      await verifyCollection.createIndex({ "code": 1 });
-      await verifyCollection.createIndex({ "expirationTime": 1 });
       
       // Note: _id is automatically unique in MongoDB, no need for custom id field
       
@@ -50,7 +44,7 @@ async function connectToMongo() {
       throw error;
     }
   }
-  return { db, usersCollection, verifyCollection };
+  return { db, usersCollection };
 }
 
 // Connect immediately when this module is imported
@@ -68,4 +62,4 @@ process.on('SIGINT', async () => {
   }
 });
 
-export { connectToMongo, usersCollection, verifyCollection };
+export { connectToMongo, usersCollection };
