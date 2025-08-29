@@ -50,6 +50,10 @@ export async function POST(request: Request) {
 
         const isValidEmail = user.mail?.endsWith(emailDomainCheck) ?? false;
 
+        if (!isValidEmail) {
+            return NextResponse.json({ success: false, error: "Not a valid BSVA email" }, { status: 401 });
+        }
+
         // Create cookie here
         const jwt = new SignJWT({
             name: user.displayName,

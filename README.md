@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BSVA Certificate Demo
 
-## Getting Started
+A demonstration project showcasing how to implement certificate creation with SSO (Single Sign-On) authentication using Microsoft Azure AD. This project demonstrates the integration of BSV blockchain technology with enterprise authentication systems for secure certificate issuance.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This application allows users to authenticate via Microsoft SSO and generate BSV certificates that are cryptographically signed and stored on the blockchain. The project serves as a reference implementation for organizations wanting to integrate BSV certificates with their existing authentication infrastructure.
+
+## Architecture
+
+- **Frontend**: Next.js 15 with TypeScript and Tailwind CSS
+- **Backend**: Express.js server with BSV SDK integration
+- **Authentication**: Microsoft Azure AD SSO
+- **Database**: MongoDB for certificate storage
+- **Blockchain**: BSV blockchain for certificate verification and revocation
+
+## Key Features
+
+- **SSO Authentication**: Microsoft Azure AD integration for secure user authentication
+- **Certificate Generation**: BSV certificates with cryptographic signatures
+- **Email Domain Validation**: Ensures only authorized domain users can generate certificates
+- **Certificate Revocation**: Built-in revocation mechanism using BSV transactions
+- **Metanet Integration**: Certificates can be registered with Metanet desktop application
+
+## Project Structure
+
+```
+├── src/
+│   ├── app/                    # Next.js app directory
+│   │   ├── auth/login/         # Microsoft SSO authentication
+│   │   ├── generate-certificate/ # Certificate generation endpoint
+│   │   └── page.tsx            # Main application page
+│   ├── components/             # React components
+│   └── lib/                    # Utility functions
+├── server/                     # Express backend
+│   ├── index.ts               # Main server file
+│   └── signCertificate.ts     # Certificate signing logic
+├── certificateRegistry.js      # Metanet registration example
+└── example.env.txt            # Environment variables template
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js 18+ and npm
+- MongoDB database
+- Microsoft Azure AD application
+- BSV wallet with storage provider
+- Metanet desktop (for certificate registration)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Setup
 
-## Learn More
+1. ### `example.env.txt`
+Template file containing all required environment variables with descriptions. Copy this to `.env` and fill in your actual values.
 
-To learn more about Next.js, take a look at the following resources:
+## How to Run the Application
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Start the Express Backend Server
+```bash
+npm run server
+```
+The server will start on the port specified in your `.env` file (default: 8080).
 
-## Deploy on Vercel
+### 3. Start the Next.js Development Server
+```bash
+npm run dev
+```
+The frontend will be available at [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Build for Production (Optional)
+```bash
+npm run build
+npm start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Usage Flow
+
+1. **Authentication**: Users click "Microsoft" to authenticate via Azure AD SSO
+2. **Email Validation**: System validates the user's email domain matches the configured domain
+3. **Certificate Generation**: Authenticated users can generate BSV certificates
+4. **Certificate Storage**: Certificates are stored in MongoDB and on the BSV blockchain
+5. **Metanet Integration**: Certificates can be registered with Metanet desktop
+
+## Key Files
+
+### `certificateRegistry.js`
+Example script demonstrating how to register certificate definitions with Metanet desktop. This file shows:
+- Wallet initialization with BSV SDK
+- Certificate definition structure
+- Registration with Metanet registry
+
+## Certificate Features
+
+- **Cryptographic Signatures**: All certificates are cryptographically signed using BSV private keys
+- **Revocation Support**: Built-in revocation mechanism using BSV transactions
+- **Field Encryption**: Certificate fields are encrypted during transmission
+- **Replay Protection**: Nonce-based replay attack prevention
+- **Database Storage**: Certificates stored in MongoDB for quick retrieval
+
+## Development
+
+The project uses:
+- **TypeScript** for type safety
+- **ESLint** for code linting
+- **Tailwind CSS** for styling
+- **React Hot Toast** for notifications
+
+### Available Scripts
+
+- `npm run dev` - Start Next.js development server
+- `npm run server` - Start Express backend server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+
+## Security Considerations
+
+- JWT tokens expire after 5 minutes for security
+- Email domain validation prevents unauthorized access
+- Certificate fields are encrypted during transmission
+- Nonce-based replay protection
+- HTTPS recommended for production deployment
+
+## Contributing
+
+This is a demonstration project for BSVA. For production use, consider:
+- Enhanced error handling
+- Rate limiting
+- Comprehensive logging
+- Security audits
+- Performance optimization
+
+## License
+
+This project is for demonstration purposes as part of the BSV Association's educational initiatives.

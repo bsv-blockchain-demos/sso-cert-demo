@@ -140,7 +140,7 @@ export default function Home() {
           <div className="space-y-8">
             <div>
               <h1 className="text-5xl font-light text-white mb-2">BSVACerts</h1>
-              <p className="text-blue-200 text-lg">Access the blockchain using your own certified identity</p>
+              <p className="text-blue-200 text-lg">Create your BSVA certificate with your Microsoft SSO login</p>
             </div>
             <div className="space-y-4">
               <p className="text-white text-lg">Welcome, {user.name}</p>
@@ -157,10 +157,9 @@ export default function Home() {
           <div className="space-y-8">
             <div>
               <h1 className="text-5xl font-light text-white mb-2">BSVACerts</h1>
-              <p className="text-blue-200 text-lg">Access the blockchain using your own certified identity</p>
+              <p className="text-blue-200 text-lg">Certify your identity with your Microsoft SSO login</p>
             </div>
             <div className="space-y-4">
-              <p className="text-white text-lg mb-6">Choose your desired identity certification</p>
               <button 
                 onClick={loginWithMicrosoft}
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2 hover:cursor-pointer"
