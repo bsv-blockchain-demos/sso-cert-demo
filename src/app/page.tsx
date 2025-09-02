@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import SuccessModal from "../components/successModal";
 import { useRouter } from "next/navigation";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
 

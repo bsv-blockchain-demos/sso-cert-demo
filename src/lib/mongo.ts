@@ -1,6 +1,23 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ServerApiVersion, Db, Collection } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
+
+interface SignedCertificate {
+  fields: Record<string, string>;
+  type: string;
+  serialNumber: string;
+  subject: string;
+  certifier: string;
+  revocationOutpoint: string;
+  signature: string;
+}
+
+export interface User {
+  _id: string;
+  updatedAt: Date;
+  createdAt: Date;
+  signedCertificate: SignedCertificate;
+}
 
 // Use environment variable for MongoDB URI or fallback to hardcoded value
 const uri = process.env.MONGODB_URI as string;
@@ -16,8 +33,8 @@ const client = new MongoClient(uri, {
 });
 
 // Database and collections
-let db: any;
-let usersCollection: any;
+let db: Db;
+let usersCollection: Collection<User>;
 
 // Connect to MongoDB
 async function connectToMongo() {
@@ -33,7 +50,6 @@ async function connectToMongo() {
       
       // Create indexes for better performance
       await usersCollection.createIndex({ "_id": 1 });
-      await usersCollection.createIndex({ "email": 1 });
       await usersCollection.createIndex({ "signedCertificate": 1 });
       
       // Note: _id is automatically unique in MongoDB, no need for custom id field

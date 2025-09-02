@@ -4,22 +4,24 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { createSecretKey } from "crypto";
 import { SignJWT } from "jose";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
-
-const config = {
-    auth: {
-        clientId: process.env.MICROSOFT_CLIENT_ID!,
-        authority: `https://login.microsoftonline.com/${process.env.MICROSOFT_TENANT_ID}`,
-        clientSecret: process.env.MICROSOFT_CLIENT_SECRET!,
-    },
-};
-
-const cca = new ConfidentialClientApplication(config);
 
 export async function POST(request: Request) {
     const body = await request.json();
     const { code } = body;
+
+    const config = {
+        auth: {
+            clientId: process.env.MICROSOFT_CLIENT_ID!,
+            authority: `https://login.microsoftonline.com/${process.env.MICROSOFT_TENANT_ID}`,
+            clientSecret: process.env.MICROSOFT_CLIENT_SECRET!,
+        },
+    };
+    
+    const cca = new ConfidentialClientApplication(config);
 
     const redirectUri = process.env.REDIRECT_URI!;
 

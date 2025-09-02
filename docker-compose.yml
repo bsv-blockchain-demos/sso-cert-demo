@@ -1,0 +1,60 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./src/app/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - SERVER_PRIVATE_KEY="21d97c3dccbc95f25d8d5a13f3a2568e608f9c85f58387cd38bf1cad93bd5d09"
+      - WALLET_STORAGE_URL="https://store-us-1.bsvb.tech"
+      - CHAIN="main"
+      - PORT="8080"
+      - REDIRECT_URI="http://localhost:3000"
+      - MONGODB_URI="mongo"
+      - MONGODB_CLUSTER_NAME="BSVACerts"
+      - CERT_TYPE="BSVA Employee Identity"
+      - JWT_SECRET="c5c8d3f05e8ed5f4958ed5ee99944fad114441a70e80c528e5cedee1951b6914"
+      - MICROSOFT_CLIENT_ID="f9f2fe03-e4c3-477f-9ac0-2ce30ff281a0"
+      - MICROSOFT_CLIENT_SECRET="ca38Q~BQ-F4mNFyA2lXCvxBWD3O4ICkKirN_ZbwL"
+      - MICROSOFT_TENANT_ID="72a3c675-0d28-4e9e-a20f-f27005415dd2"
+    depends_on:
+      - mongo
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - SERVER_PRIVATE_KEY="21d97c3dccbc95f25d8d5a13f3a2568e608f9c85f58387cd38bf1cad93bd5d09"
+      - WALLET_STORAGE_URL="https://store-us-1.bsvb.tech"
+      - CHAIN="main"
+      - PORT="8080"
+      - REDIRECT_URI="http://localhost:3000"
+      - MONGODB_URI="mongo"
+      - MONGODB_CLUSTER_NAME="BSVACerts"
+      - CERT_TYPE="BSVA Employee Identity"
+      - JWT_SECRET="c5c8d3f05e8ed5f4958ed5ee99944fad114441a70e80c528e5cedee1951b6914"
+      - MICROSOFT_CLIENT_ID="f9f2fe03-e4c3-477f-9ac0-2ce30ff281a0"
+      - MICROSOFT_CLIENT_SECRET="ca38Q~BQ-F4mNFyA2lXCvxBWD3O4ICkKirN_ZbwL"
+      - MICROSOFT_TENANT_ID="72a3c675-0d28-4e9e-a20f-f27005415dd2"
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:

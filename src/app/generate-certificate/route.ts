@@ -5,6 +5,8 @@ import { connectToMongo } from '../../lib/mongo';
 import { cookies } from 'next/headers';
 import { createSecretKey } from 'crypto';
 import { jwtVerify, errors } from 'jose';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const serverPubKey = process.env.NEXT_PUBLIC_SERVER_PUBLIC_KEY as string;
 const certifierUrl = process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080";

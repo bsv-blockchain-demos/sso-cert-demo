@@ -11,7 +11,7 @@ import {
     Hash
 } from '@bsv/sdk'
 import { WalletStorageManager, Services, Wallet, StorageClient, WalletSigner } from '@bsv/wallet-toolbox-client'
-import { connectToMongo, usersCollection } from '../src/lib/mongo'
+import { connectToMongo, usersCollection, User } from '../src/lib/mongo'
 import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 dotenv.config()
@@ -174,7 +174,7 @@ export async function signCertificate(req: Request, res: Response) {
         }
         
         await usersCollection.updateOne({ _id: documentId }, 
-            { $set: documentToSave },
+            { $set: documentToSave as Partial<User> },
             { upsert: true }
         );
         
