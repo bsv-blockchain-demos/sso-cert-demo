@@ -11,7 +11,7 @@ import {
     Hash
 } from '@bsv/sdk'
 import { WalletStorageManager, Services, Wallet, StorageClient, WalletSigner } from '@bsv/wallet-toolbox-client'
-import { connectToMongo, usersCollection, User } from '../src/lib/mongo'
+import { connectToMongo, usersCollection, User } from './lib/mongo'
 import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 dotenv.config()

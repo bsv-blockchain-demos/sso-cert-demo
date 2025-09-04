@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "server": "npx tsx server/index.ts",
+    "build:server": "cd server && tsc",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

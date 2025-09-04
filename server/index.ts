@@ -3,10 +3,9 @@ import bodyParser from 'body-parser'
 import { createAuthMiddleware } from '@bsv/auth-express-middleware'
 import { WalletClient, PrivateKey, KeyDeriver, WalletInterface } from '@bsv/sdk'
 import { WalletStorageManager, Services, Wallet, StorageClient } from '@bsv/wallet-toolbox-client'
-import { signCertificate } from './signCertificate.ts'
-import dotenv from 'dotenv'
-
-dotenv.config();
+import { signCertificate } from './signCertificate'
+import { config } from 'dotenv'
+config();
 
 const SERVER_PRIVATE_KEY = process.env.SERVER_PRIVATE_KEY as string;
 const WALLET_STORAGE_URL = process.env.WALLET_STORAGE_URL as string;
