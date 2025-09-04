@@ -1,16 +1,15 @@
 FROM node:20-alpine
 
-WORKDIR /server
+WORKDIR /app
 
+# Copy package files from root
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-COPY . .
+# Copy server source code and only the lib directory it needs
+COPY server/ ./server/
+COPY src/lib/ ./src/lib/
 
 EXPOSE 8080
 
-ENV NEXT_PUBLIC_SERVER_PUBLIC_KEY="02531f30cd97188c244657493ca42fadeeb0d53bec4feddaf5019aa5f2af84f6fd"
-ENV NEXT_PUBLIC_CERTIFIER_URL="http://localhost:8080"
-ENV NEXT_PUBLIC_EMAIL_DOMAIN_CHECK="@bsvassociation.org"
-
-CMD ["npm", "server"]
+CMD ["npm", "run", "server"]
