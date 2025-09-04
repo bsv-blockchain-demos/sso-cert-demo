@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         }
 
         // Check db for certificate
-        const { db, usersCollection } = await connectToMongo();
+        const { usersCollection } = await connectToMongo();
         const { publicKey } = await wallet.getPublicKey({ identityKey: true });
         const user = await usersCollection.findOne({ _id: publicKey });
 

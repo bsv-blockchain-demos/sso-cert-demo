@@ -5,8 +5,8 @@ import { connectWallet } from "../../lib/connectWallet";
 // For now keeping it simple with just a db check
 // For future could possible use listCertificate to find the specific cert if needed
 
-export async function GET(request: Request) {
-    const { db, usersCollection } = await connectToMongo();
+export async function GET() {
+    const { usersCollection } = await connectToMongo();
     const wallet = await connectWallet();
 
     if (!wallet) {

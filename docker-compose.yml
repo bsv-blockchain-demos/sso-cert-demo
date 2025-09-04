@@ -4,15 +4,37 @@ services:
       context: .
       dockerfile: ./src/app/Dockerfile
       args:
-        NEXT_PUBLIC_EMAIL_DOMAIN_CHECK: ${NEXT_PUBLIC_EMAIL_DOMAIN_CHECK}
-        NEXT_PUBLIC_SERVER_PUBLIC_KEY: ${NEXT_PUBLIC_SERVER_PUBLIC_KEY}
-        NEXT_PUBLIC_CERTIFIER_URL: ${NEXT_PUBLIC_CERTIFIER_URL}
+        - SERVER_PRIVATE_KEY=${SERVER_PRIVATE_KEY}
+        - WALLET_STORAGE_URL=${WALLET_STORAGE_URL}
+        - CHAIN=${CHAIN}
+        - REDIRECT_URI=${REDIRECT_URI}
+        - MONGODB_URI=mongodb://root:example@mongo:27017/BSVACerts?authSource=admin
+        - MONGODB_CLUSTER_NAME=${MONGODB_CLUSTER_NAME}
+        - CERT_TYPE=${CERT_TYPE}
+        - JWT_SECRET=${JWT_SECRET}
+        - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
+        - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
+        - MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
+        - NEXT_PUBLIC_SERVER_PUBLIC_KEY=${NEXT_PUBLIC_SERVER_PUBLIC_KEY}
+        - NEXT_PUBLIC_CERTIFIER_URL=${NEXT_PUBLIC_CERTIFIER_URL}
+        - NEXT_PUBLIC_EMAIL_DOMAIN_CHECK=${NEXT_PUBLIC_EMAIL_DOMAIN_CHECK}
     ports:
       - "3000:3000"
     env_file:
       - .env
     environment:
       - NODE_ENV=production
+      - SERVER_PRIVATE_KEY=${SERVER_PRIVATE_KEY}
+      - WALLET_STORAGE_URL=${WALLET_STORAGE_URL}
+      - CHAIN=${CHAIN}
+      - REDIRECT_URI=${REDIRECT_URI}
+      - MONGODB_URI=mongodb://root:example@mongo:27017/BSVACerts?authSource=admin
+      - MONGODB_CLUSTER_NAME=${MONGODB_CLUSTER_NAME}
+      - CERT_TYPE=${CERT_TYPE}
+      - JWT_SECRET=${JWT_SECRET}
+      - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
+      - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
+      - MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
     depends_on:
       - mongo
       - backend
@@ -32,6 +54,18 @@ services:
       - .env
     environment:
       - NODE_ENV=production
+
+      - SERVER_PRIVATE_KEY=${SERVER_PRIVATE_KEY}
+      - WALLET_STORAGE_URL=${WALLET_STORAGE_URL}
+      - CHAIN=${CHAIN}
+      - REDIRECT_URI=${REDIRECT_URI}
+      - MONGODB_URI=mongodb://root:example@mongo:27017/BSVACerts?authSource=admin
+      - MONGODB_CLUSTER_NAME=${MONGODB_CLUSTER_NAME}
+      - CERT_TYPE=${CERT_TYPE}
+      - JWT_SECRET=${JWT_SECRET}
+      - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
+      - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
+      - MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
     depends_on:
       - mongo
     restart: unless-stopped
@@ -43,6 +77,9 @@ services:
     volumes:
       - mongo_data:/data/db
     restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
 
 volumes:
   mongo_data:

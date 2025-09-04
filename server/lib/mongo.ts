@@ -1,7 +1,9 @@
 import { MongoClient, ServerApiVersion, Db, Collection } from "mongodb";
+import { config } from "dotenv";
+config();
 
 console.log({
-  nextEnv: process.env
+  serverEnv: process.env
 })
 
 interface SignedCertificate {

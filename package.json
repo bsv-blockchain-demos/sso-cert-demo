@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "server": "npx tsx server/index.ts",
+    "server": "node server/dist/index.js",
+    "build:server": "cd server && tsc",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

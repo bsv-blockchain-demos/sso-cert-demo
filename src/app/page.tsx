@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import SuccessModal from "../components/successModal";
 import { useRouter } from "next/navigation";
-import dotenv from 'dotenv';
-dotenv.config();
 
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
 
@@ -38,7 +36,7 @@ export default function Home() {
       }
     }
     checkCode();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const checkCertificateOwnership = async () => {
@@ -57,7 +55,7 @@ export default function Home() {
       }
     }
     checkCertificateOwnership();
-  }, [user]);
+  }, [user, router]);
 
   const loginWithMicrosoft = async () => {
     // Redirect to microsoft login
