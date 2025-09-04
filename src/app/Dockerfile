@@ -74,6 +74,10 @@ RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 
+# Set the port for Next.js
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
 # Expose port
 EXPOSE 3000
 

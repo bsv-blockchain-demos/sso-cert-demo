@@ -7,9 +7,8 @@ services:
         - SERVER_PRIVATE_KEY=${SERVER_PRIVATE_KEY}
         - WALLET_STORAGE_URL=${WALLET_STORAGE_URL}
         - CHAIN=${CHAIN}
-        - PORT=${PORT}
         - REDIRECT_URI=${REDIRECT_URI}
-        - MONGODB_URI=${MONGODB_URI}
+        - MONGODB_URI=mongodb://root:example@mongo:27017/BSVACerts?authSource=admin
         - MONGODB_CLUSTER_NAME=${MONGODB_CLUSTER_NAME}
         - CERT_TYPE=${CERT_TYPE}
         - JWT_SECRET=${JWT_SECRET}
@@ -26,16 +25,14 @@ services:
       - SERVER_PRIVATE_KEY=${SERVER_PRIVATE_KEY}
       - WALLET_STORAGE_URL=${WALLET_STORAGE_URL}
       - CHAIN=${CHAIN}
-      - PORT=${PORT}
       - REDIRECT_URI=${REDIRECT_URI}
-      - MONGODB_URI=${MONGODB_URI}
+      - MONGODB_URI=mongodb://root:example@mongo:27017/BSVACerts?authSource=admin
       - MONGODB_CLUSTER_NAME=${MONGODB_CLUSTER_NAME}
       - CERT_TYPE=${CERT_TYPE}
       - JWT_SECRET=${JWT_SECRET}
       - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
       - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
       - MICROSOFT_TENANT_ID=${MICROSOFT_TENANT_ID}
-      - MICROSOFT_TENANT_ID="72a3c675-0d28-4e9e-a20f-f27005415dd2"
     depends_on:
       - mongo
       - backend
@@ -52,9 +49,8 @@ services:
       - SERVER_PRIVATE_KEY=${SERVER_PRIVATE_KEY}
       - WALLET_STORAGE_URL=${WALLET_STORAGE_URL}
       - CHAIN=${CHAIN}
-      - PORT=${PORT}
       - REDIRECT_URI=${REDIRECT_URI}
-      - MONGODB_URI=${MONGODB_URI}
+      - MONGODB_URI=mongodb://root:example@mongo:27017/BSVACerts?authSource=admin
       - MONGODB_CLUSTER_NAME=${MONGODB_CLUSTER_NAME}
       - CERT_TYPE=${CERT_TYPE}
       - JWT_SECRET=${JWT_SECRET}
@@ -72,6 +68,9 @@ services:
     volumes:
       - mongo_data:/data/db
     restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
 
 volumes:
   mongo_data:
