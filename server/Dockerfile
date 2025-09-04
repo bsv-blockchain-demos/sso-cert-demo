@@ -1,11 +1,14 @@
 FROM node:20-alpine
 
-WORKDIR /server
+WORKDIR /app
 
+# Copy package files from root
 COPY package.json package-lock.json ./
 RUN npm ci
 
-COPY . .
+# Copy server source code and only the lib directory it needs
+COPY server/ ./server/
+COPY src/lib/ ./src/lib/
 
 # Build TypeScript for production
 RUN npm run build:server

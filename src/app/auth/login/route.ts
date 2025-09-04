@@ -4,8 +4,6 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { createSecretKey } from "crypto";
 import { SignJWT } from "jose";
-import dotenv from 'dotenv';
-dotenv.config();
 
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
 
