@@ -74,6 +74,12 @@ export async function POST(request: Request) {
         if (err instanceof errors.JWTExpired) {
             cookieStore.delete("verified");
             return NextResponse.json({ success: false, error: "Token expired" }, { status: 401 });
+        } else if (err instanceof errors.JWTInvalid) {
+            cookieStore.delete("verified");
+            return NextResponse.json({ success: false, error: "Invalid token" }, { status: 401 });
+        } else if (err instanceof errors.JWSSignatureVerificationFailed) {
+            cookieStore.delete("verified");
+            return NextResponse.json({ success: false, error: "Invalid token signature" }, { status: 401 });
         }
         return NextResponse.json({ success: false, error: err instanceof Error ? err.message : "Unknown error" }, { status: 401 });
     }
