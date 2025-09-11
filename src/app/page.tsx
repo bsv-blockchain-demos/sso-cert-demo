@@ -92,8 +92,7 @@ export default function Home() {
         method: 'POST',
         body: JSON.stringify({
           fields: {
-            name: user.name,
-            email: user.email,
+            isValidBSVEmail: user.isValidEmail,
           },
         }),
       })

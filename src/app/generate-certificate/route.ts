@@ -33,11 +33,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
-        if (payload.email !== fields.email) {
+        if (!payload.email) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
-        if (payload.name !== fields.name) {
+        if (!payload.name) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 

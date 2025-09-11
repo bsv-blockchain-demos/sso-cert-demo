@@ -78,7 +78,6 @@ export async function POST(request: Request) {
         return NextResponse.json({
             success: true,
             user: {
-                name: user.displayName,
                 email: user.mail,
                 isValidEmail,
             },
