@@ -4,8 +4,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import SuccessModal from "../components/successModal";
 import { useRouter } from "next/navigation";
+import { connectWallet } from "../lib/connectWallet";
+import { Utils } from "@bsv/sdk";
 
 const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
+const certType = process.env.NEXT_PUBLIC_CERT_TYPE as string;
+const serverPubKey = process.env.NEXT_PUBLIC_SERVER_PUBLIC_KEY as string;
+const certifierUrl = process.env.NEXT_PUBLIC_CERTIFIER_URL as string || "http://localhost:8080";
 
 export default function Home() {
   const [user, setUser] = useState<{ name: string; email: string; isValidEmail: boolean } | null>(null);
@@ -43,9 +48,20 @@ export default function Home() {
       if (!user) {
         return;
       }
+
+      const wallet = await connectWallet();
+      if (!wallet) {
+        throw new Error('Wallet not connected');
+      }
+
+      const { publicKey } = await wallet.getPublicKey({ identityKey: true });
+
       const response = await fetch("/check-certificate-ownership", {
         headers: { "Content-Type": "application/json" },
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify({
+          publicKey,
+        }),
       });
       const data = await response.json();
       console.log(data);
@@ -62,7 +78,9 @@ export default function Home() {
     const response = await fetch("/auth/login", {
       headers: { "Content-Type": "application/json" },
       method: "POST",
-      body: JSON.stringify({ code: "" }),
+      body: JSON.stringify({
+        code: "",
+      }),
     });
 
     const data = await response.json();
@@ -86,14 +104,19 @@ export default function Home() {
       return;
     }
 
+    const wallet = await connectWallet();
+    if (!wallet) {
+      throw new Error('Wallet not connected');
+    }
+
+    const { publicKey } = await wallet.getPublicKey({ identityKey: true });
+
     try {
-      const response = await fetch('/generate-certificate', {
+      const response = await fetch('/check-verification', {
         headers: { "Content-Type": "application/json" },
         method: 'POST',
         body: JSON.stringify({
-          fields: {
-            isValidBSVEmail: user.isValidEmail,
-          },
+          publicKey,
         }),
       })
 
@@ -109,11 +132,26 @@ export default function Home() {
         throw new Error(data.error);
       }
 
-      if (data.data === "User already has a certificate") {
+      if (data.message === "User already has a certificate") {
+        toast.error("User already has a certificate");
         router.push("/owns-certificate");
         return;
       }
-      
+
+      // Verified cookie, continue
+      const fields = {
+        isValidBSVEmail: String(user.isValidEmail),
+      };
+
+      const certResponse = await wallet.acquireCertificate({
+        type: Utils.toBase64(Utils.toArray(certType, 'utf8')),
+        fields,
+        acquisitionProtocol: "issuance",
+        certifier: serverPubKey,
+        certifierUrl,
+      });
+      console.log(certResponse);
+
       setShowSuccessModal(true);
     } catch (error: unknown) {
       console.log(error);
@@ -144,7 +182,7 @@ export default function Home() {
             <div className="space-y-4">
               <p className="text-white text-lg">Welcome, {user.name}</p>
               <p className="text-blue-200 text-sm">{user.email}</p>
-              <button 
+              <button
                 onClick={generateCertificate}
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:cursor-pointer"
               >
@@ -159,12 +197,12 @@ export default function Home() {
               <p className="text-blue-200 text-lg">Certify your identity with your Microsoft SSO login</p>
             </div>
             <div className="space-y-4">
-              <button 
+              <button
                 onClick={loginWithMicrosoft}
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2 hover:cursor-pointer"
               >
                 <svg className="w-5 h-5" viewBox="0 0 23 23" fill="currentColor">
-                  <path d="M11 11h11v11H11V11zM0 11h11v11H0V11zM11 0h11v11H11V0zM0 0h11v11H0V0z"/>
+                  <path d="M11 11h11v11H11V11zM0 11h11v11H0V11zM11 0h11v11H11V0zM0 0h11v11H0V0z" />
                 </svg>
                 <span>Microsoft</span>
               </button>
