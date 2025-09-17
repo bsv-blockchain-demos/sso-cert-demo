@@ -35,6 +35,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
+        if (publicKey !== payload.publicKey) {
+            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+        }
+
         // Check db for certificate
         const { usersCollection } = await connectToMongo();
         const userCertificate = await usersCollection.findOne({ _id: publicKey });

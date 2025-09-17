@@ -28,10 +28,20 @@ export default function Home() {
         // Clean the URL for UX
         window.history.replaceState({}, document.title, window.location.pathname);
 
+        const wallet = await connectWallet();
+        if (!wallet) {
+          throw new Error('Wallet not connected');
+        }
+
+        const { publicKey } = await wallet.getPublicKey({ identityKey: true });
+
         const response = await fetch("/auth/login", {
           headers: { "Content-Type": "application/json" },
           method: "POST",
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({
+            code,
+            publicKey,
+          }),
         })
 
         const data = await response.json();

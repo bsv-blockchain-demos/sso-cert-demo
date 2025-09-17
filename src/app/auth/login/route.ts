@@ -9,7 +9,7 @@ const emailDomainCheck = process.env.NEXT_PUBLIC_EMAIL_DOMAIN_CHECK as string;
 
 export async function POST(request: Request) {
     const body = await request.json();
-    const { code } = body;
+    const { code, publicKey } = body;
 
     const config = {
         auth: {
@@ -59,6 +59,7 @@ export async function POST(request: Request) {
             name: user.displayName,
             email: user.mail,
             isValidEmail,
+            publicKey,
         });
         jwt.setProtectedHeader({ alg: "HS256" });
         jwt.setExpirationTime("5m");
