@@ -51,11 +51,6 @@ export async function signCertificate(req: Request, res: Response) {
             return res.status(400).json({ error: 'User wallet not found' });
         }
 
-        const wallet = new WalletClient("auto", "localhost");
-        if (!wallet) {
-            return res.status(400).json({ error: 'User wallet not found' });
-        }
-
         console.log({ subject })
 
         // Decrypt certificate fields and verify them before signing
